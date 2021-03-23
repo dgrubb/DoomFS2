@@ -27,6 +27,7 @@
 */
 
 #include <jo/jo.h>
+#include "game/game_main.h"
 
 void
 jo_main(void)
