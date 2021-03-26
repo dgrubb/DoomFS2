@@ -7,4 +7,5 @@
  *      and defaults.
  */
 
+void menu_init();
 void menu_load_defaults();

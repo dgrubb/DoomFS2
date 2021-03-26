@@ -10,6 +10,11 @@
 #include "menu/misc.h"
 
 void
+menu_init()
+{
+}
+
+void
 menu_load_defaults()
 {
 

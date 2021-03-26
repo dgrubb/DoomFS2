@@ -14,4 +14,6 @@ game_doom_main()
 {
     /* Initialise sub-systems */
     video_init();
+    menu_load_defaults();
+    menu_init();
 }
