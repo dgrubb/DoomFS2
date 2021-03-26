@@ -1,0 +1,2 @@
+
+void video_init();
