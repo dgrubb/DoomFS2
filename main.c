@@ -32,6 +32,9 @@
 void
 jo_main(void)
 {
-	jo_core_init(JO_COLOR_Black);
-	jo_core_run();
+    jo_core_init(JO_COLOR_Black);
+
+    game_doom_main();
+
+    jo_core_run();
 }

@@ -2,6 +2,8 @@
 rm -f ./cd/0.bin
 rm -f *.o
 rm -f ./src/game/*.o
+rm -f ./src/menu/*.o
+rm -f ./src/video/*.o
 rm -f ../../jo_engine/*.o
 rm -f ./*.bin
 rm -f ./*.coff
