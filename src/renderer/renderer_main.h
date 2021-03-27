@@ -6,3 +6,4 @@
  *      Top-level entry for the renderer module.
  */
 
+void renderer_init();

@@ -8,4 +8,7 @@
 
 #include "renderer/renderer_main.h"
 
-
+void
+renderer_init()
+{
+}

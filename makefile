@@ -11,8 +11,10 @@ JO_DEBUG = 1
 JO_NTSC = 0
 JO_COMPILE_USING_SGL=1
 SRCS=main.c \
+	 src/hud/stuff.c \
 	 src/game/game_main.c \
 	 src/menu/misc.c \
+	 src/play/setup.c \
 	 src/renderer/renderer_main.c \
 	 src/video/video.c
 CCFLAGS += -I./src/
