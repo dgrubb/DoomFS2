@@ -7,4 +7,19 @@
  *      game loop.
  */
 
+#ifndef GAME_MAIN_H
+#define GAME_MAIN_H
+
+#include "defines.h"
+
+/* Worker functions */
 void game_doom_main();
+game_action_t game_inner_loop(void(*start)(void), void(*stop)(int), int(*ticker)(void), void(*drawer)(void));
+
+/* Functions which implement portions of the
+ * non-gameplay experience
+ */
+game_action_t game_run_menu();
+game_action_t game_run_title();
+
+#endif /* GAME_MAIN_H */

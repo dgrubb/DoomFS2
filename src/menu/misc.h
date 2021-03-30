@@ -7,5 +7,10 @@
  *      and defaults.
  */
 
+#ifndef MISC_H
+#define MISC_H
+
 void menu_init();
 void menu_load_defaults();
+
+#endif /* MISC_H */

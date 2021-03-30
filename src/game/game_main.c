@@ -7,12 +7,19 @@
  *      game loop.
  */
 
+#include "defines.h"
+#include "game/game_main.h"
 #include "hud/stuff.h"
 #include "menu/misc.h"
 #include "play/setup.h"
 #include "renderer/renderer_main.h"
 #include "video/video.h"
 
+/* Initial starting point for entering
+ * the game engine specifically.
+ *
+ * Never returns.
+ */
 void
 game_doom_main()
 {
@@ -23,4 +30,44 @@ game_doom_main()
     renderer_init();
     play_init();
     hud_init();
+
+    while (1) {
+        if (game_run_title() != GA_Exit) {
+        }
+
+        do {} while (game_run_menu() != GA_Timeout);
+    }
+}
+
+/* Displays the menu to the user,
+ * executed by an inner render loop.
+ *
+ * Returns with a state when completed.
+ */
+game_action_t
+game_run_menu()
+{
+    return GA_Exit;
+}
+
+/* Displays the initial introduction effects,
+ * executed by an inner render loop.
+ *
+ * Returns with a state when completed.
+ */
+game_action_t
+game_run_title()
+{
+    return game_inner_loop(title_start, title_stop, title_ticker, title_draw);
+}
+
+/* Runs a small render loop which executes the non-gameplay
+ * experiences (e.g., menu, title screen etc).
+ *
+ * Returns with a state when completed.
+ */
+game_action_t
+game_inner_loop(void(*start)(void), void(*stop)(int), int(*ticker)(void), void(*drawer)(void))
+{
+    return GA_Exit;
 }

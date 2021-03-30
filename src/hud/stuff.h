@@ -6,4 +6,9 @@
  *      HUD state management
  */
 
+#ifndef STUFF_H
+#define STUFF_H
+
 void hud_init();
+
+#endif /* STUFF_H */
