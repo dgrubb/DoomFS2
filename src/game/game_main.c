@@ -21,6 +21,8 @@
 #include "play/setup.h"
 #include "video/video.h"
 
+
+
 /* Initial starting point for entering
  * the game engine specifically.
  *
@@ -51,6 +53,39 @@ game_doom_main()
     */
 }
 
+/* In between the rendering the game engine will execute
+ * a callback to allow for the game logic to have a slice
+ * of time. This is where the basic state machine will decide
+ * which branch of execution to follow.
+ *
+ * No return value.
+ */
+void
+game_time_slice()
+{
+    /* The game always starts with showing the introductory
+     * fire/logo scroll. Will later transition to other states
+     * dictated by the simple state machine
+     */
+    static game_state_t game_state = GS_Title;
+
+    /* Walk through the game state machine */
+    switch (game_state)
+    {
+        case GS_Menu: game_run_menu(); break;
+        case GS_Play: /* TODO */; break;
+        case GS_Title:
+            if (GA_Nothing != game_run_title()) {
+                /* Title introductory screen has finished, move onto
+                 * the next state
+                 */
+                game_state = GS_Menu;
+            }
+            break;
+        default: /* TODO */ break;
+    }
+}
+
 /* Displays the menu to the user,
  * executed by an inner render loop.
  *
@@ -79,24 +114,37 @@ game_run_title()
  * Returns with a state when completed.
  */
 game_action_t
-game_inner_loop(void(*start)(void), void(*stop)(int), int(*ticker)(void), void(*drawer)(void))
+game_inner_loop(void(*start)(void), void(*stop)(game_action_t), game_action_t(*ticker)(void), void(*drawer)(void))
 {
+    /* Storage of state in between time slices */
+    static bool init = false;
+    static bool finished = false;
     game_action_t exit;
 
     /* Perform scene setup, cache graphics, etc */
-    start();
+    if (!init) {
+        start();
+        init = true;
+    }
 
     /* TODO: Read buttons */
 
     /* Update state, exit if scene has completed execution */
     exit = ticker();
-    if (GA_Nothing != exit) break;
+    if (GA_Nothing != exit) return exit;
 
     /* Perform render updates */
     drawer();
 
-    /* Teardown scene */
-    stop(exit);
+    /* Teardown scene, deallocate memory, reset devices etc */
+    if (finished) {
+        stop(exit);
+        /* Reset state so the next scene
+         * enters this function afresh
+         */
+        init = false;
+        finished = false;
+    }
 
     return exit;
 }

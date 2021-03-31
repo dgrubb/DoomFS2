@@ -26,7 +26,7 @@
 ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <jo.jo.h>
+#include <jo/jo.h>
 #include "game/game_main.h"
 
 void

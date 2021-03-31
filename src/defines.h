@@ -10,6 +10,16 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+/* Basic state machine states the game
+ * can be in.
+ */
+typedef enum
+{
+    GS_Title,
+    GS_Menu,
+    GS_Play
+} game_state_t;
+
 /* Specifies top-level events for
  * traversing through the game logic.
  */
