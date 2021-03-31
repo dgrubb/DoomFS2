@@ -9,10 +9,12 @@
 
 #include "defines.h"
 #include "game/game_main.h"
+#include "game/title.h"
 #include "hud/stuff.h"
 #include "menu/misc.h"
-#include "play/setup.h"
 #include "renderer/renderer_main.h"
+#include "game/title.h"
+#include "play/setup.h"
 #include "video/video.h"
 
 /* Initial starting point for entering
@@ -69,5 +71,25 @@ game_run_title()
 game_action_t
 game_inner_loop(void(*start)(void), void(*stop)(int), int(*ticker)(void), void(*drawer)(void))
 {
-    return GA_Exit;
+    game_action_t exit;
+
+    /* Perform scene setup, cache graphics, etc */
+    start();
+
+    while (1) {
+
+        /* TODO: Read buttons */
+
+        /* Update state, exit if scene has completed execution */
+        exit = ticker();
+        if (GA_Nothing != exit) break;
+
+        /* Perform render updates */
+        drawer();
+    }
+
+    /* Teardown scene */
+    stop(exit);
+
+    return exit;
 }
