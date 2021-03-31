@@ -9,6 +9,9 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
+#define VIDEO_HEIGHT 240
+#define VIDEO_WIDTH 320
+
 void video_init();
 
 #endif /* VIDEO_H */

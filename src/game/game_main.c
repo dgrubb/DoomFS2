@@ -7,6 +7,10 @@
  *      game loop.
  */
 
+/* Engine include */
+#include <jo/jo.h>
+
+/* Game source */
 #include "defines.h"
 #include "game/game_main.h"
 #include "game/title.h"
@@ -37,12 +41,14 @@ game_doom_main()
     play_init();
     hud_init();
 
+    /*
     while (1) {
         if (game_run_title() != GA_Exit) {
         }
 
         do {} while (game_run_menu() != GA_Timeout);
     }
+    */
 }
 
 /* Displays the menu to the user,
@@ -80,17 +86,14 @@ game_inner_loop(void(*start)(void), void(*stop)(int), int(*ticker)(void), void(*
     /* Perform scene setup, cache graphics, etc */
     start();
 
-    while (1) {
+    /* TODO: Read buttons */
 
-        /* TODO: Read buttons */
+    /* Update state, exit if scene has completed execution */
+    exit = ticker();
+    if (GA_Nothing != exit) break;
 
-        /* Update state, exit if scene has completed execution */
-        exit = ticker();
-        if (GA_Nothing != exit) break;
-
-        /* Perform render updates */
-        drawer();
-    }
+    /* Perform render updates */
+    drawer();
 
     /* Teardown scene */
     stop(exit);

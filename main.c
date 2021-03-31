@@ -26,15 +26,29 @@
 ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <jo/jo.h>
+#include <jo.jo.h>
 #include "game/game_main.h"
 
 void
 jo_main(void)
 {
+    /* Initialise Jo engine */
     jo_core_init(JO_COLOR_Black);
+    jo_core_enable_reset();
 
+    /* Setup game engine */
     game_doom_main();
 
+    /* The normal DOOM engine uses many hand-rolled loops
+     * with inner-loops and a hardware timer derived from the
+     * sound subsystem - tuned to the specific VGA output of 90s
+     * era PCs - to manage both its game logic and render updates
+     * interpolated around each other. In this port, Jo engine provides
+     * a more modern event and callback driven structure.
+     *
+     * Rendering will largely be handled by Jo engine, with game logic
+     * updated prompted by callbacks and events in time slices between
+     * frames.
+     */
     jo_core_run();
 }
