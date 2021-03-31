@@ -25,6 +25,10 @@
 void
 game_doom_main()
 {
+    /* Initialise Jo engine */
+    jo_core_init(JO_COLOR_Black);
+    jo_core_enable_reset();
+
     /* Initialise sub-systems */
     video_init();
     menu_load_defaults();
