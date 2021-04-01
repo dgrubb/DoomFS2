@@ -15,6 +15,7 @@
 /* Worker functions */
 void game_doom_main();
 game_action_t game_inner_loop(void(*start)(void), void(*stop)(game_action_t), game_action_t(*ticker)(void), void(*drawer)(void));
+void game_time_slice();
 
 /* Functions which implement portions of the
  * non-gameplay experience

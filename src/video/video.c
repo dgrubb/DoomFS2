@@ -20,5 +20,7 @@ video_init()
      * the original engine's intent but with the added bonus of handling the
      * skybox in a hardware accelerated layer.
      */
+    /* TODO: decide what is actually needed here:
     jo_set_displayed_screens(JO_NBG0_SCREEN);
+    */
 }

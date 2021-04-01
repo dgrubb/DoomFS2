@@ -32,10 +32,6 @@
 void
 jo_main(void)
 {
-    /* Initialise Jo engine */
-    jo_core_init(JO_COLOR_Black);
-    jo_core_enable_reset();
-
     /* Setup game engine */
     game_doom_main();
 
@@ -50,5 +46,6 @@ jo_main(void)
      * updated prompted by callbacks and events in time slices between
      * frames.
      */
+    jo_core_add_callback(game_time_slice);
     jo_core_run();
 }

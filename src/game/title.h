@@ -15,6 +15,7 @@ void title_draw();
 void title_start();
 void title_stop(game_action_t exit_state);
 game_action_t title_ticker();
-
+void do_fire();
+void spread_fire(int from);
 #endif /* TITLE_H */
 

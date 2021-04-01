@@ -42,15 +42,6 @@ game_doom_main()
     renderer_init();
     play_init();
     hud_init();
-
-    /*
-    while (1) {
-        if (game_run_title() != GA_Exit) {
-        }
-
-        do {} while (game_run_menu() != GA_Timeout);
-    }
-    */
 }
 
 /* In between the rendering the game engine will execute
