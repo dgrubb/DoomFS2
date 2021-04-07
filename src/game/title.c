@@ -10,6 +10,10 @@
 #include "game/title.h"
 #include "video/video.h"
 
+/* Describes a small colour palette which extends from dark
+ * brown and red hues at the bottom, up through oranges and yellows,
+ * to white at the top. Simulates the heat spectrum range of fire
+ */
 const jo_color fire_palette[] = {
     JO_COLOR_Transparent, /* Transparent */
     32771,
@@ -117,7 +121,8 @@ title_draw_fire()
 
 /* Updates a single pixel colour based on the state of its
  * nearest neighbours, with a little randomness for extra 
- * effect.
+ * effect. Derived from algorithm detailed at:
+ * https://fabiensanglard.net/doom_fire_psx/
  */
 void
 title_update_fire(int origin)
