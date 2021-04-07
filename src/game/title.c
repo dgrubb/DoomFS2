@@ -10,7 +10,7 @@
 #include "game/title.h"
 #include "video/video.h"
 
-const jo_color fire_palette_test[] = {
+const jo_color fire_palette[] = {
     JO_COLOR_Transparent, /* Transparent */
     32771,
     32085,
@@ -49,22 +49,14 @@ const jo_color fire_palette_test[] = {
     JO_COLOR_White
 };
 
-int
-get_palette_idx(jo_color color)
-{
-    int i=0;
-    for (i=0; i<36; i++) {
-        if (color == fire_palette_test[i]) {
-            return i;
-        }
-    }
-    return 0;
-}
-
-/* Pointer to allocated scratch memory for drawing onto */
-jo_software_renderer_gfx* fire;
-const int fire_width = VIDEO_WIDTH;
-const int fire_height = VIDEO_HEIGHT/4;
+jo_software_renderer_gfx* fire;          /* Pointer to sprite used as scratch render surface */
+char* fire_idx;                          /* Poiner to table containing colour lookup indexes */
+const int fire_width = VIDEO_WIDTH;      /* Width of teh fire sprite */
+const int fire_height = VIDEO_HEIGHT/4;  /* Height of the fire sprite */
+const float fire_horizontal_scale = 1.0; /* Horizontal scaling factor of fire sprite */
+const float fire_vertical_scale = 2.5;   /* Vertical scaling factor of fire sprite */
+const int fire_x = 0;                    /* Fire sprite X coordinate */
+const int fire_y = 136;                  /* Fire sprite Y coordinate */
 
 /* Grabs the content of the progressing fire image
  * and draws it to the correct layer on frame update.
@@ -72,22 +64,30 @@ const int fire_height = VIDEO_HEIGHT/4;
 void
 title_draw()
 {
-    jo_sprite_draw3D2(fire->sprite_id, 0, VIDEO_HEIGHT-fire_height, 500);
+    jo_sprite_draw3D2(fire->sprite_id, fire_x, fire_y, 500);
 }
 
-/* Allocate VDP1 memeory to use as a crude framebuffer for
+/* Allocate VDP1 memory to use as a crude framebuffer for
  * drawing intermediary fire effect steps onto.
  */
 void
 title_start()
 {
+    /* Allocate memory for a sprite and a table of colour lookup indexes */
+    fire_idx = (char*)jo_malloc(sizeof(char) * fire_width * fire_height);
+    jo_memset(fire_idx, 0, (sizeof(char) * fire_width * fire_height));
     fire = jo_software_renderer_create(fire_width, fire_height, JO_SPRITE_SCREEN);
-    jo_software_renderer_clear(fire, JO_COLOR_Cyan);
-    //jo_sprite_set_palette(fire_palette.id);
-    /* Draw a line of white pixels from which the fire effect will emerge from */
+    jo_software_renderer_clear(fire, JO_COLOR_Transparent);
+
+    /* Draw a line of white pixels where the fire effect will emenate from */
     for (int i=0; i<fire_width; i++) {
-        fire->color_buffer[i + (fire_height-1) * fire->vram_size.width] = JO_COLOR_White;
+        fire_idx[i + (fire_height-1) * fire_width] = 34;
     }
+
+    /* Use hardware scaling to better fill the screen without needing to 
+     * handle every pixel in software.
+     */
+    jo_sprite_change_sprite_scale_xy(fire_horizontal_scale, fire_vertical_scale);
 }
 
 /* Deallocate VDP1 memory allocated when starting the
@@ -96,29 +96,53 @@ title_start()
 void
 title_stop(game_action_t exit_state)
 {
+    jo_free(fire_idx);
     jo_software_renderer_free(fire);
 }
 
+/* Updates the entire fire sprite with a fresh
+ * appearance and copies the new drawing into 
+ * proper video RAM.
+ */
 void
-do_fire()
+title_draw_fire()
 {
     for (int x=0; x<fire_width; x++) {
         for (int y=1; y<fire_height; y++) {
-            spread_fire(y * fire_width + x);
+            title_update_fire(y * fire_width + x);
         }
     }
     jo_software_renderer_flush(fire);
 }
 
+/* Updates a single pixel colour based on the state of its
+ * nearest neighbours, with a little randomness for extra 
+ * effect.
+ */
 void
-spread_fire(int from)
+title_update_fire(int origin)
 {
     int rand = jo_random(3) & 3;
-    fire->color_buffer[from - fire_width - rand + 1] = fire_palette_test[get_palette_idx(fire->color_buffer[from]) - (rand & 1)];
-    /*
-    int to = from - fire_width - rand + 1;
-    fire->color_buffer[to] = fire->color_buffer[from] - (rand & 1);
-    */
+    int destination = origin - fire_width - rand + 1;
+    /* New colour state is updated by shifting progressively lower through the 
+     * colour lookup table by a number of indexes between 1 and 3. As long as the
+     * lower most strip of pixels is "white hot" the fire will burn
+     */
+    fire_idx[destination] = fire_idx[origin] - (rand & 1);
+    fire->color_buffer[destination] = fire_palette[fire_idx[destination]];
+}
+
+/* Erases the bottom line of fire pixels so only progressively
+ * lower values of shifts through the colour lookup table will
+ * now occur. The visual effect will be of the flames appearing
+ * to cool off and peter out.
+ */
+void
+title_extinguish_fire()
+{
+    for (int i=0; i<fire_width; i++) {
+        fire_idx[i + (fire_height-1) * fire_width] = 0;
+    }
 }
 
 /* Update fire animation. Call repeatedly between screen
@@ -129,7 +153,9 @@ spread_fire(int from)
 game_action_t
 title_ticker()
 {
-    do_fire();
+    /* Update the fire animation */
+    title_draw_fire();
+
     /* Indicate more updates are required */
     return GA_Nothing;
 }
