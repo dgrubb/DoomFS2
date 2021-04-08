@@ -118,11 +118,9 @@ game_inner_loop(void(*start)(void), void(*stop)(game_action_t), game_action_t(*t
         init = true;
     }
 
-    /* TODO: Read buttons */
-
     /* Update state, exit if scene has completed execution */
     exit = ticker();
-    if (GA_Nothing != exit) return exit;
+    if (GA_Nothing != exit) finished = true;
 
     /* Perform render updates */
     drawer();

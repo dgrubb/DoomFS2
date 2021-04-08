@@ -53,14 +53,17 @@ const jo_color fire_palette[] = {
     JO_COLOR_White
 };
 
-jo_software_renderer_gfx* fire;          /* Pointer to sprite used as scratch render surface */
-char* fire_idx;                          /* Poiner to table containing colour lookup indexes */
-const int fire_width = VIDEO_WIDTH;      /* Width of teh fire sprite */
-const int fire_height = VIDEO_HEIGHT/4;  /* Height of the fire sprite */
-const float fire_horizontal_scale = 1.0; /* Horizontal scaling factor of fire sprite */
-const float fire_vertical_scale = 2.5;   /* Vertical scaling factor of fire sprite */
-const int fire_x = 0;                    /* Fire sprite X coordinate */
-const int fire_y = 136;                  /* Fire sprite Y coordinate */
+/* Transient object pointers */
+static jo_software_renderer_gfx* fire;              /* Pointer to sprite used as scratch render surface */
+static unsigned char*            fire_idx;          /* Poiner to table containing colour lookup indexes */
+
+/* Constants */
+const int   fire_width            = VIDEO_WIDTH;    /* Width of the fire sprite */
+const int   fire_height           = VIDEO_HEIGHT/4; /* Height of the fire sprite */
+const float fire_horizontal_scale = 1.0;            /* Horizontal scaling factor of fire sprite */
+const float fire_vertical_scale   = 2.5;            /* Vertical scaling factor of fire sprite */
+const int   fire_x                = 0;              /* Fire sprite X coordinate */
+const int   fire_y                = 136;            /* Fire sprite Y coordinate */
 
 /* Grabs the content of the progressing fire image
  * and draws it to the correct layer on frame update.
@@ -78,8 +81,9 @@ void
 title_start()
 {
     /* Allocate memory for a sprite and a table of colour lookup indexes */
-    fire_idx = (char*)jo_malloc(sizeof(char) * fire_width * fire_height);
-    jo_memset(fire_idx, 0, (sizeof(char) * fire_width * fire_height));
+    fire_idx = (unsigned char*)jo_malloc_with_behaviour((sizeof(unsigned char) * fire_width * fire_height), JO_MALLOC_TRY_REUSE_BLOCK);
+    jo_printf(3, 3, "data ptr: 0x%X", (&fire_idx)-1);
+    jo_memset(fire_idx, 0, (sizeof(unsigned char) * fire_width * fire_height));
     fire = jo_software_renderer_create(fire_width, fire_height, JO_SPRITE_SCREEN);
     jo_software_renderer_clear(fire, JO_COLOR_Transparent);
 
@@ -100,8 +104,9 @@ title_start()
 void
 title_stop(game_action_t exit_state)
 {
-    jo_free(fire_idx);
+    jo_printf(3, 5, "sizeof: 0x%X", (&fire_idx)-1);
     jo_software_renderer_free(fire);
+    jo_free(fire_idx);
 }
 
 /* Updates the entire fire sprite with a fresh
@@ -160,6 +165,13 @@ title_ticker()
 {
     /* Update the fire animation */
     title_draw_fire();
+
+    /* Poll inputs and exit if the user presses any action button */
+    if (jo_is_pad1_available()) {
+        if (jo_is_pad1_key_down(JO_KEY_A)) {
+            return GA_Exit;
+        }
+    }
 
     /* Indicate more updates are required */
     return GA_Nothing;
