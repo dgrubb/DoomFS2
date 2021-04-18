@@ -57,6 +57,11 @@ const jo_color fire_palette[] = {
 static jo_software_renderer_gfx* fire;              /* Pointer to sprite used as scratch render surface */
 static unsigned char*            fire_idx;          /* Poiner to table containing colour lookup indexes */
 
+/* Count how many times the sequence has been updated so it can be
+ * made to expire after a certain amount of time
+ */
+static int update_count = 0;
+
 /* Constants */
 const int   fire_width            = VIDEO_WIDTH;    /* Width of the fire sprite */
 const int   fire_height           = VIDEO_HEIGHT/4; /* Height of the fire sprite */
@@ -64,6 +69,7 @@ const float fire_horizontal_scale = 1.0;            /* Horizontal scaling factor
 const float fire_vertical_scale   = 2.5;            /* Vertical scaling factor of fire sprite */
 const int   fire_x                = 0;              /* Fire sprite X coordinate */
 const int   fire_y                = 136;            /* Fire sprite Y coordinate */
+const int   update_count_range    = 60;             /* Number of animation iterations to run before extinguishing */
 
 /* Grabs the content of the progressing fire image
  * and draws it to the correct layer on frame update.
@@ -92,7 +98,7 @@ title_start()
         fire_idx[i + (fire_height-1) * fire_width] = 34;
     }
 
-    /* Use hardware scaling to better fill the screen without needing to 
+    /* Use hardware scaling to better fill the screen without needing to
      * handle every pixel in software.
      */
     jo_sprite_change_sprite_scale_xy(fire_horizontal_scale, fire_vertical_scale);
@@ -118,7 +124,7 @@ title_stop(game_action_t exit_state)
 }
 
 /* Updates the entire fire sprite with a fresh
- * appearance and copies the new drawing into 
+ * appearance and copies the new drawing into
  * proper video RAM.
  */
 void
@@ -133,7 +139,7 @@ title_draw_fire()
 }
 
 /* Updates a single pixel colour based on the state of its
- * nearest neighbours, with a little randomness for extra 
+ * nearest neighbours, with a little randomness for extra
  * effect. Derived from algorithm detailed at:
  * https://fabiensanglard.net/doom_fire_psx/
  */
@@ -142,11 +148,11 @@ title_update_fire(int origin)
 {
     int rand = jo_random(3) & 3;
     int destination = origin - fire_width - rand + 1;
-    /* Bounds check to avoid scrubbing over memory below the first index, 
+    /* Bounds check to avoid scrubbing over memory below the first index,
      * allocated for block descriptor
      */
     if (destination < 0) destination = 0;
-    /* New colour state is updated by shifting progressively lower through the 
+    /* New colour state is updated by shifting progressively lower through the
      * colour lookup table by a number of indexes between 1 and 3. As long as the
      * lower most strip of pixels is "white hot" the fire will burn
      */
@@ -177,6 +183,11 @@ title_ticker()
 {
     /* Update the fire animation */
     title_draw_fire();
+
+    /* After a set number of animation iterations extinguish the
+     * source of the fire so the animation will burn itself out
+     */
+    if (update_count++ == update_count_range) title_extinguish_fire();
 
     /* Poll inputs and exit if the user presses any action button */
     if (jo_is_pad1_available()) {
