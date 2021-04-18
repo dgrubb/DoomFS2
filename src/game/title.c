@@ -88,7 +88,6 @@ title_start()
 {
     /* Allocate memory for a sprite and a table of colour lookup indexes */
     fire_idx = (unsigned char*)jo_malloc_with_behaviour((sizeof(unsigned char) * fire_width * fire_height), JO_MALLOC_TRY_REUSE_BLOCK);
-    jo_printf(3, 3, "data ptr: 0x%X", fire_idx);
     jo_memset(fire_idx, 0, (sizeof(unsigned char) * fire_width * fire_height));
     fire = jo_software_renderer_create(fire_width, fire_height, JO_SPRITE_SCREEN);
     jo_software_renderer_clear(fire, JO_COLOR_Transparent);
@@ -110,17 +109,8 @@ title_start()
 void
 title_stop(game_action_t exit_state)
 {
-    jo_printf(3, 5, "sizeof: 0x%X", fire_idx);
-
-    if (JO_NULL != fire) {
-        jo_software_renderer_free(fire);
-        fire = JO_NULL;
-    }
-
-    if (JO_NULL != fire_idx) {
-        jo_free(fire_idx);
-        fire_idx = JO_NULL;
-    }
+    jo_software_renderer_free(fire);
+    jo_free(fire_idx);
 }
 
 /* Updates the entire fire sprite with a fresh
