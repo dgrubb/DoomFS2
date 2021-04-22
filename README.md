@@ -2,7 +2,7 @@
 
 A reimplementation of the [DOOM engine](https://en.wikipedia.org/wiki/Doom_(1993_video_game)) for the [Sega Saturn console](https://en.wikipedia.org/wiki/Sega_Saturn) built around the [Jo engine](https://www.jo-engine.org/).
 
-![Fire intro screenshot](docs/fire-intro.png)
+![Fire intro screenshot](doc/fire-intro.png)
 
 ## Background
 
