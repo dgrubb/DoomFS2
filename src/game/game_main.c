@@ -23,13 +23,15 @@
 #include "video/video.h"
 #include "wad/wad_main.h"
 
+static game_error_t error = GE_None;
 
 /* Initial starting point for entering
  * the game engine specifically.
  *
- * Never returns.
+ * Returns false if something goes wrong during
+ * initialisation and sets an error.
  */
-void
+bool
 game_doom_main()
 {
     /* Initialise Jo engine */
@@ -43,7 +45,29 @@ game_doom_main()
     renderer_init();
     play_init();
     hud_init();
-    wad_init();
+    if (!wad_init()) {
+        error = GE_WadError;
+        return false;
+    }
+
+    return true;
+}
+
+/* If something went wrong setting up the game (e.g.,
+ * allocating a resource, loading a file etc) then the engine
+ * will still start the render loop so it can deliver a message
+ * to the user infroming them what went wrong.
+ */
+void
+game_report_error()
+{
+    switch (error)
+    {
+        case GE_WadError: jo_printf(3, 3, "Failed to load WAD"); break;
+        case GE_None: /* Intentional fall-through */
+        default:
+            jo_printf(3, 3, "No errors reported");
+    }
 }
 
 /* In between the rendering the game engine will execute

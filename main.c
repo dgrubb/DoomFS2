@@ -33,7 +33,7 @@ void
 jo_main(void)
 {
     /* Setup game engine */
-    game_doom_main();
+    bool success = game_doom_main();
 
     /* The normal DOOM engine uses many hand-rolled loops
      * with inner-loops and a hardware timer derived from the
@@ -46,6 +46,10 @@ jo_main(void)
      * updated prompted by callbacks and events in time slices between
      * frames.
      */
-    jo_core_add_callback(game_time_slice);
+    if (success) {
+        jo_core_add_callback(game_time_slice);
+    } else {
+        jo_core_add_callback(game_report_error);
+    }
     jo_core_run();
 }

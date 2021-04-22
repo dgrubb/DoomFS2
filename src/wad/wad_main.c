@@ -29,17 +29,17 @@ static char*        psx_doom_wad_lumpencode;
 /* Loads the main content WAD file containing
  * the port specific data
  */
-void
+bool
 wad_init()
 {
     /* Open WAD file and parse its info table */
     jo_fs_cd(FILE_PSXDOOM_DIR);
     if (!jo_fs_open(&psx_doom_wad_fs, FILE_PSXDOOM_WAD)) {
-        return;
+        return false;
     }
     char* buffer = jo_malloc(sizeof(wadinfo_t));
     if (JO_NULL == buffer) {
-        return;
+        return false;
     }
     /* Reset back to the root directory */
     jo_fs_cd(JO_PARENT_DIR);
@@ -47,7 +47,7 @@ wad_init()
     /* Load the WAD file info block to validate */
     if (0 == jo_fs_read_next_bytes(&psx_doom_wad_fs, buffer, sizeof(wadinfo_t))) {
         /* Reading reached end of file, which shouldn't happen here */
-        return;
+        return false;
     }
 
     /* Read the first four bytes of the target file to validate it's
@@ -55,7 +55,7 @@ wad_init()
      */
     for (int i=0; i<4; i++) {
         if (((wadinfo_t*)buffer)->id[i] != wad_header_id[i]) {
-            return;
+            return false;
         }
     }
 
@@ -69,4 +69,6 @@ wad_init()
      */
     psx_doom_wad_lumpcache = (lumpcache_t*)jo_malloc(psx_doom_wad_numlumps * sizeof(lumpcache_t));
     psx_doom_wad_lumpencode = (char*)jo_malloc(psx_doom_wad_numlumps);
+
+    return true;
 }

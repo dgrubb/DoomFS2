@@ -12,6 +12,6 @@
 
 #include "defines.h"
 
-void wad_init();
+bool wad_init();
 
 #endif /* WAD_MAIN_H */

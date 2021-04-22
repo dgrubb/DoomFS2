@@ -13,7 +13,8 @@
 #include "defines.h"
 
 /* Worker functions */
-void game_doom_main();
+bool game_doom_main();
+void game_report_error();
 game_action_t game_inner_loop(void(*start)(void), void(*stop)(game_action_t), game_action_t(*ticker)(void), void(*drawer)(void));
 void game_time_slice();
 

@@ -39,6 +39,12 @@ typedef enum
     GA_Exit
 } game_action_t;
 
+typedef enum
+{
+    GE_None,
+    GE_WadError
+} game_error_t;
+
 /* WAD file info block, for full specification see:
  * https://doom.fandom.com/wiki/WAD
  */
