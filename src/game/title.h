@@ -18,5 +18,5 @@ game_action_t title_ticker();
 void title_draw_fire();
 void title_extinguish_fire();
 void title_update_fire(int origin);
-#endif /* TITLE_H */
 
+#endif /* TITLE_H */

@@ -15,10 +15,12 @@ SRCS=main.c \
 	 src/hud/stuff.c \
 	 src/game/game_main.c \
 	 src/game/title.c \
+	 src/menu/menu_main.c \
 	 src/menu/misc.c \
 	 src/play/setup.c \
 	 src/renderer/renderer_main.c \
-	 src/video/video.c
+	 src/video/video.c \
+	 src/wad/wad_main.c
 CCFLAGS += -I./src/
 JO_ENGINE_SRC_DIR=../../jo_engine
 COMPILER_DIR=../../Compiler

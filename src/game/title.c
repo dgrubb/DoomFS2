@@ -107,7 +107,7 @@ title_start()
  * title introduction.
  */
 void
-title_stop(game_action_t exit_state)
+title_stop(game_action_t game_state)
 {
     jo_software_renderer_free(fire);
     jo_free(fire_idx);

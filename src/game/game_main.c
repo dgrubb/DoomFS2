@@ -15,12 +15,13 @@
 #include "game/game_main.h"
 #include "game/title.h"
 #include "hud/stuff.h"
+#include "menu/menu_main.h"
 #include "menu/misc.h"
 #include "renderer/renderer_main.h"
 #include "game/title.h"
 #include "play/setup.h"
 #include "video/video.h"
-
+#include "wad/wad_main.h"
 
 
 /* Initial starting point for entering
@@ -42,6 +43,7 @@ game_doom_main()
     renderer_init();
     play_init();
     hud_init();
+    wad_init();
 }
 
 /* In between the rendering the game engine will execute
@@ -85,7 +87,7 @@ game_time_slice()
 game_action_t
 game_run_menu()
 {
-    return GA_Exit;
+    return game_inner_loop(menu_start, menu_stop, menu_ticker, menu_draw);
 }
 
 /* Displays the initial introduction effects,
