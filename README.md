@@ -6,7 +6,7 @@ A reimplementation of the [DOOM engine](https://en.wikipedia.org/wiki/Doom_(1993
 
 ## Background
 
-The Sega Saturn recieved an [official port of DOOM](https://doom.fandom.com/wiki/Sega_Saturn) which suffered from a very low frame rate. The hardware appears well-suited to the mixure of pseudo-3D and sprite based rendering but the [developer was instructed](https://fabiensanglard.net/doom_psx/) to perform a straight up port of the game without using VDP1 and VDP2's custom video acceleration, instead relying on software rendering on the two SH-2 processors. As an exercise in exploring the Saturn's hardware I feel performing a similar port - one which will make greater use of the graphics hardware - would be the best way to get hands on experience with the platform. With a little luck, we may even get some playable levels out of the project. :)
+The Sega Saturn recieved an [official port of DOOM](https://doom.fandom.com/wiki/Sega_Saturn) which suffered from a very low frame rate. The hardware appears well-suited to the mixure of pseudo-3D and sprite based rendering but the [developer was instructed](https://fabiensanglard.net/doom_psx/) to perform a straight up port of the game without using VDP1 and VDP2's custom 3D video acceleration, relying on software rendering on the two SH-2 processors instead. As an exercise in exploring the Saturn's hardware I feel performing a similar port - one which will make greater use of the graphics hardware - would be the best way to get hands on experience with the platform. With a little luck, we may even get some playable levels out of the project. :)
 
 ## Resources
 
