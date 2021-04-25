@@ -6,6 +6,7 @@ rm -f ./src/game/*.o
 rm -f ./src/menu/*.o
 rm -f ./src/play/*.o
 rm -f ./src/renderer/*.o
+rm -f ./src/sys/*.o
 rm -f ./src/video/*.o
 rm -f ./src/wad/*.o
 rm -f ../../jo_engine/*.o

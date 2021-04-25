@@ -19,6 +19,7 @@ SRCS=main.c \
 	 src/menu/misc.c \
 	 src/play/setup.c \
 	 src/renderer/renderer_main.c \
+	 src/sys/sys_util.c \
 	 src/video/video.c \
 	 src/wad/wad_main.c
 CCFLAGS += -I./src/

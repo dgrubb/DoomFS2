@@ -13,5 +13,7 @@
 #include "defines.h"
 
 bool wad_init();
+int wad_get_lump_by_id(char* name);
+char* wad_cache_lump(int lump, bool decode);
 
 #endif /* WAD_MAIN_H */

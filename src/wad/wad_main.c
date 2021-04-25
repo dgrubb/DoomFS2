@@ -72,3 +72,61 @@ wad_init()
 
     return true;
 }
+
+/* Looks up the index of a lump by its
+ * name. Returns -1 if not found.
+ */
+int
+wad_get_lump_by_id(char* id)
+{
+    char        name[12];
+    int         first_four_bytes, second_four_bytes;
+    lumpinfo_t* lump_ptr;
+
+    jo_memset(name, 0, sizeof(name));
+    for (int i=0; i<8; i++) {
+        name[i] = id[i];
+    }
+
+    lump_ptr = psx_doom_wad_lumpinfo + psx_doom_wad_numlumps;
+    first_four_bytes = *(int*)name;
+    second_four_bytes = *(int*)&name[4];
+
+    /* The name string will always have a maximum of 8 characters, or
+     * 64 bits. Target architecture is 32 bit so, as an non-portable
+     * optimisation, the two halves of the string can be converted into
+     * two integers. Comparing two integers is far less costly than iterating
+     * over the eight characters and comapring each one in turn a byte at
+     * a time.
+     */
+    while (lump_ptr != psx_doom_wad_lumpinfo) {
+        /* N.b., the first bit of the first byte is masked out */
+        if (*(int*)&lump_ptr->name[4] == second_four_bytes && (*(int*)lump_ptr->name & 0x7F) == first_four_bytes) {
+            return lump_ptr - psx_doom_wad_lumpinfo;
+        }
+    }
+
+    return -1;
+}
+
+/* Loads a lump into memory assigned for
+ * caching content. Returns pointer or
+ * NULL on error.
+ */
+char*
+wad_cache_lump(int lump, bool decode)
+{
+    int size;
+    lumpcache_t *cache;
+
+    if (psx_doom_wad_numlumps <= lump) {
+        return JO_NULL;
+    }
+
+    cache = &psx_doom_wad_lumpcache[lump];
+    if (!cache->cache) {
+        
+    }
+
+
+}
