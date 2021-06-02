@@ -125,8 +125,19 @@ wad_cache_lump(int lump, bool decode)
 
     cache = &psx_doom_wad_lumpcache[lump];
     if (!cache->cache) {
-        
+
+        // TODO: Other engine has two ways of deducing how much memory
+        // to alloc. Should investigate further, but this implements
+        // the initial path - DAG
+        cache->cache = jo_malloc(psx_doom_wad_lumpinfo[lump].size);
+        wad_read_lump(lump, cache->cache);
+
+        if (psx_doom_wad_lumpinfo[lump].name[0] & 0x80 == 0) {
+            psx_doom_wad_lumpencode[lump] = 1;
+        } else {
+            // TODO: figure out exactly what goes on here - DAG
+        }
     }
 
-
+    return cache->cache;
 }
