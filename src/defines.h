@@ -57,8 +57,8 @@ typedef struct
 
 typedef struct
 {
-    int file_pos;
-    int size;
+    int  file_pos;
+    int  size;
     char name[8];
 } lumpinfo_t;
 
@@ -66,5 +66,27 @@ typedef struct
 {
     void* cache;
 } lumpcache_t;
+
+typedef struct obj_s
+{
+    short          x;
+    short          y;
+    short          w;
+    short          h;
+
+    unsigned char  vramx;
+    unsigned char  vramy;
+
+    unsigned short vtpage;
+    unsigned short vbasex;
+    unsigned short vbasey;
+    unsigned short lump;
+    unsigned short pad1;
+
+    unsigned long  *vptr;
+    unsigned int   pad2;
+    unsigned int   index;
+
+} obj_t;
 
 #endif /* DEFINES_H */
